@@ -90,7 +90,7 @@ for indir in director[0]:
                 list_name_sh.append(sh_file)
 
                 for linea in orig_file:
-                    if linea.startswith('rm -f pmproc.*') != True:
+                    if linea.startswith('rm -f pmproc.*') != True and linea.startswith('rm -f pmtst.*') != True:
                         mod_file.write(linea)
                 mod_file.close()
                 orig_file.close()
