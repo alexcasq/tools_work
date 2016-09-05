@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # Author: Alexander Castillo Quintero,  MNI TechOnRails
-# Description: Scripts utils, clean files .c .o and m_file.sh, rename files: name.c to rename.c
+# Description: Scripts utils, clean files .c .o and m_file.sh, rename files: name.c to rename.c and rename .pas
 # Date: 2016-08-09
 # Version: 1.0
 # ----------------------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ def clean_all(path):
             if file.endswith('.sh'):
                 file_strip = file.strip("_")
                 ext_M = file_strip[0]
-                if ext_M != "M" or ext_M != "m":
+                if ext_M == "M" or ext_M == "m":
                     pathFile = pathFolder + file
                     os.remove(pathFile)
 
@@ -109,7 +109,7 @@ def rename(path, ext):
         name = find_sh(pathFolder)
         if len(name) > 0:
             for file in os.listdir(pathFolder):
-                if file.endswith('.c'):
+                if file.endswith(ext):
                     pathFile = pathFolder + file
                     pathrename = pathFolder + name + ext
                     print "--------------------------------------------------"
@@ -154,12 +154,19 @@ if __name__ == "__main__":
         print find_sh(path)
 
     if sel[0] == '-help' and len(sel) > 0:
-        print "-----------------------"
-        print "find_sh(path)"
-        print "clean_all(path)"
-        print "clean(path, extension)"
-        print "rename(path, extension)"
-        print "-----------------------"
+        print "-----------------------------"
+        print "find_sh   'path' "
+        print "clean_all 'path' "
+        print "clean     'path' 'extension' "
+        print "rename    'path' 'extension' "
+        print "------------------------------"
+
+
+
+
+
+
+
 
 
 
