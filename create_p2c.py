@@ -67,8 +67,9 @@ for sub in subFolder[0]:
         print "Not c file ---"
         pas_file = find_pas(pathFolder)
         if len(pas_file) > 0:
-            print pas_file
-            comand = "p2c "  +  str(pas_file) + ".pas"
+            #print pas_file
+            #print pathFolder
+            comand = "p2c " + pathFolder + str(pas_file) + ".pas"
             os.system(comand)
             print comand
 # ---------------------------------------------------------------------------
