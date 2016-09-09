@@ -79,7 +79,7 @@ for indir in director[0]:
         line_rem = "del " + bat_name + '.pas'
         print line_rem
 
-        if name_bat_M != "empty" and name_bat != "empty":
+        if name_bat_M != " " and name_bat != " ":
             flag_open = True
             try:
                 mod_file = open(name_bat_M, "w")

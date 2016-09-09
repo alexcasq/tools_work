@@ -65,7 +65,7 @@ def clean_all(path):
             if file.endswith('.sh'):
                 file_strip = file.strip("_")
                 ext_M = file_strip[0]
-                if ext_M == "M" or ext_M == "m":
+                if ext_M == "M" or ext_M == "m" or ext_M == "c":
                     pathFile = pathFolder + file
                     os.remove(pathFile)
 
