@@ -107,7 +107,7 @@ for indir in director[0]:
 # # Create script to execute .sh of each folder
 # # -------------------------------------------------------------------------------------------
 size_list = len(list_dir)
-name_exec = directory + "execute_masive.sh"
+name_exec = directory + "execute_masive_c.sh"
 print "creating execute_masive : "
 print name_exec
 if size_list > 0:

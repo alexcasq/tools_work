@@ -35,8 +35,8 @@ def create_sh(path):
                 print "Creating sh in path"
                 print "New sh file      :  ", name_sh_M
                 print "Original sh file :  ", name_sh
-                return name_sh_M, name_sh, file
                 print "---------------------------------------------------------------------------------------------"
+                return name_sh_M, name_sh, file
 
 
 # -----------------------------------------------------------------------------------------------------------------------
