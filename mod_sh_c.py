@@ -123,12 +123,8 @@ if size_list > 0:
         # $(cd carpeta/ ; sh m_aplicacion.sh)
         comand_cdsh = "$(cd " + fileList + " ; " + "sh " + "c_" + list_name_sh[index] + ".sh" ")"
 
-        # comand_cd = "cd " + fileList
-        # comand_sh = "sh " + list_name_sh[index]
-        # execute_massive.write(comand_cd + "\n")
-        # execute_massive.write(comand_sh + "\n")
         execute_massive.write(comand_cdsh + "\n")
 
-        execute_massive.close()
+        #execute_massive.close()
 
 # -------------------------------------------------------------------------------------------

@@ -141,7 +141,6 @@ def rename_file(path, file_name):
     ext = file_strip[1]
     print ext
 
-
     subFolders = []
     subFolders = listFolder(path)
     vfolder = subFolders[0]
@@ -161,6 +160,40 @@ def rename_file(path, file_name):
                     print pathrename
                     print "--------------------------------------------------"
                     os.rename(pathFile, pathrename)
+
+
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# rename files whit especific extension
+# ------------------------------------------------------------------------------
+def rename_file_app(path, file_name):
+    print "-------------------------------------"
+    print "Rename files to extension "
+    print "-------------------------------------"
+
+    file_strip = file_name.split(".")
+    ext = file_strip[1]
+    #print ext
+    subFolders = []
+    subFolders = listFolder(path)
+    vfolder = subFolders[0]
+
+    for folder in vfolder:
+        #print folder
+        pathFolder = path + folder + "/"
+
+        for file in os.listdir(pathFolder):
+            if file == file_name:
+                pathFile = pathFolder + file
+                pathrename = pathFolder + folder +  "." + ext
+                print "--------------------------------------------------"
+                print "Rename files : "
+                print pathFolder
+                print pathFile
+                print pathrename
+                print "--------------------------------------------------"
+                os.rename(pathFile, pathrename)
 
 
 # ------------------------------------------------------------------------------
@@ -197,18 +230,25 @@ if __name__ == "__main__":
         rename_file(path, file_name)
         print "rename file execute finish"
 
+    if sel[0] == '-rename_file_app' and len(sel) > 2:
+        path       = sel[1]
+        file_name  = sel[2]
+        rename_file_app(path, file_name)
+        print "rename file_app execute finish"
+
     if sel[0] == '-find_sh' and len(sel) > 1:
         path = sel[1]
         print find_sh(path)
 
     if sel[0] == '-help' and len(sel) > 0:
-        print "----------------------------------"
-        print "find_sh       'path' "
-        print "clean_all     'path' "
-        print "clean         'path' 'extension' "
-        print "rename        'path' 'extension' "
-        print "rename_file   'path' 'file_name' "
-        print "----------------------------------"
+        print "-------------------------------------"
+        print "find_sh          'path' "
+        print "clean_all        'path' "
+        print "clean            'path' 'extension' "
+        print "rename           'path' 'extension' "
+        print "rename_file      'path' 'file_name' "
+        print "rename_file_app  'path' 'file_name' "
+        print "-------------------------------------"
 
 
 
