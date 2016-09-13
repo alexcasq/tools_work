@@ -72,6 +72,11 @@ for indir in director[0]:
     if indir != '.svn':
         name_sh_M, name_sh, sh_file = create_sh(path_in)
 
+        split_sh = sh_file.split(".")
+        name_pas = split_sh[0] + '.pas'
+        line_pas = 'rm -f ' + name_pas
+        #print line_pas
+
         if name_sh_M != " " and name_sh != " ":
 
             flag_open = True
@@ -87,7 +92,7 @@ for indir in director[0]:
                 list_name_sh.append(sh_file)
 
                 for linea in orig_file:
-                    if linea.startswith('rm -f pmproc.*') != True and linea.startswith('rm -f pmtst.*') != True:
+                    if linea.startswith('rm -f pmproc.*') != True and linea.startswith(line_pas) != True:
                         mod_file.write(linea)
                 mod_file.close()
                 orig_file.close()
