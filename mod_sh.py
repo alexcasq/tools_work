@@ -100,7 +100,7 @@ for indir in director[0]:
                 for linea in orig_file:
                     if 'pmproc' in linea:
                         flag_pmproc = True
-                    if linea.startswith('rm -f pmproc.*') != True and linea.startswith(line_pas) != True:
+                    if not linea.startswith(line_pas):
                         mod_file.write(linea)
                     if flag_pmproc and linea.startswith('# Remove temporal files'):
                             mod_file.write(rename_c + '\n')

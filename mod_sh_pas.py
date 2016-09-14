@@ -14,35 +14,59 @@ from shutil import copyfile
 # Function to creating sh file, this file is created as a copy of a ixisting file sh
 # -----------------------------------------------------------------------------------------------------------------------
 def create_sh(path):
-    name_sh_c = " "
+
     name_sh = " "
-    ext_c = " "
-    flag_c = False
+    name_sh_pas = " "
+    ext_pas = " "
     # Verifying that exist the file with extension .c
+    flag_pas = False
 
     for file in os.listdir(path):
 
-        if file.endswith('.c'):
-            flag_c = True
-            file_strip = file.split(".c")
-            ext_c = file_strip[0]
+        if file.endswith('.pas'):
+            flag_pas = True
+            file_strip = file.split(".pas")
+            ext_pas = file_strip[0]
 
-            name_sh_c = path + "/" + "c_" + ext_c + ".sh"
-            name_sh = path + "/" + ext_c + ".sh"
+            name_sh_pas = path + "/" + "p_" + ext_pas + ".sh"
+            name_sh = path + "/m_" + ext_pas + ".sh"
             print "----------------------------------------------------------------------------------"
             print "Creating sh in path"
-            print "new sh      : ", name_sh_c
+            print "new sh      : ", name_sh_pas
             print "original sh : ", name_sh
-            print "file raiz   :", ext_c
-            copyfile(name_sh, name_sh_c)
+            print "file raiz   :", ext_pas
+            copyfile(name_sh, name_sh_pas)
             print "----------------------------------------------------------------------------------"
 
-        if not flag_c:
+        if flag_pas:
             print "path: ", path
-            print "Not file .c, not created sh file \n"
+            print "Not file .pas, not created sh file \n"
 
-    return name_sh_c, name_sh, ext_c
+    return name_sh_pas, name_sh, ext_pas
 
+
+# -----------------------------------------------------------------------------------------------------------------------
+# Function to find string pmproc in sh file
+# -----------------------------------------------------------------------------------------------------------------------
+def verify_not_pcproc(name_sh):
+
+    salida = True
+    flag_open = True
+    try:
+        orig_file = open(name_sh)
+        flag_open = True
+
+    except:
+        print "Not is possible to open the file "
+        flag_open = False
+
+    if flag_open:
+        print "open file ok..."
+        for linea in orig_file:
+            if 'pmproc' in linea:
+                salida = False
+
+    return salida
 
 # -----------------------------------------------------------------------------------------------------------------------
 
@@ -81,6 +105,10 @@ for indir in director[0]:
 
         if name_sh_M != " " and name_sh != " ":
 
+            flag_pmproc = False
+            print name_sh
+            flag_pmproc = verify_not_pcproc(name_sh)
+            print "flag not pmproc : ", flag_pmproc
             flag_open = True
 
             try:
@@ -91,21 +119,21 @@ for indir in director[0]:
                 flag_open = False
 
             if flag_open:
-                list_dir.append(name_sh_M)
-                path_sw.append(path_in)
-                list_name_sh.append(sh_file)
 
-                for linea in orig_file:
-                    if linea.startswith('export DOSAUTOCD='):
-                        flag_section = False
+                if flag_pmproc:
+                    list_dir.append(name_sh_M)
+                    path_sw.append(path_in)
+                    list_name_sh.append(sh_file)
 
-                    if flag_section:
-                        mod_file.write(linea)
+                    for linea in orig_file:
+                        if linea.startswith('export DOSAUTOCD='):
+                            flag_section = False
 
-                    if linea.startswith('$CC -c $PMCFLAGS pmproc.c'):
-                        flag_section = True
-                        lineaR = linea.replace("pmproc.c", str(sh_file + '.c'), 1)
-                        mod_file.write(lineaR)
+                        if flag_section:
+                            mod_file.write(linea)
+
+                        if linea.startswith('# Procesing testing code for PASCAL'):
+                            flag_section = True
 
                 mod_file.close()
                 orig_file.close()
@@ -114,11 +142,10 @@ for indir in director[0]:
 # # Create script to execute .sh of each folder
 # # -------------------------------------------------------------------------------------------
 size_list = len(list_dir)
-name_exec = directory + "execute_masive_c.sh"
+name_exec = directory + "execute_masive_pas.sh"
 if size_list > 0:
     print "creating execute_masive : "
     print name_exec
-
     # print size_list
     # print list_dir
     execute_massive = open(name_exec, "w")
@@ -129,7 +156,7 @@ if size_list > 0:
         print "Folder: ", fileList
         print "------------------------------------------------------------------------"
         # $(cd carpeta/ ; sh m_aplicacion.sh)
-        comand_cdsh = "$(cd " + fileList + " ; " + "sh " + "c_" + list_name_sh[index] + ".sh" ")"
+        comand_cdsh = "$(cd " + fileList + " ; " + "sh " + "pas_" + list_name_sh[index] + ".sh" ")"
 
         execute_massive.write(comand_cdsh + "\n")
 
