@@ -9,15 +9,44 @@ import os
 import sys
 from shutil import copyfile
 
+# -----------------------------------------------------------------------------------------------------------------------
+# Function to find string pmproc in sh file
+# -----------------------------------------------------------------------------------------------------------------------
+def verify_dosemu(name_sh):
+
+    salida = False
+    flag_open = True
+    try:
+        orig_file = open(name_sh)
+        flag_open = True
+
+    except:
+        print "Not is possible to open the file "
+        flag_open = False
+
+    if flag_open:
+        print "open file ok, verify dosemu  ......"
+        for linea in orig_file:
+            if 'dosemu' in linea:
+                salida = True
+
+    return salida
+
+# -----------------------------------------------------------------------------------------------------------------------
+
 
 # -----------------------------------------------------------------------------------------------------------------------
 # Function to creating sh file, this file is created as a copy of a ixisting file sh
 # -----------------------------------------------------------------------------------------------------------------------
 def create_sh(path):
 
+    name_sh_M = " "
+    name_sh = " "
+    flag_dosemu = False
+
     # Verifying that exist the file with extension sh
     for file in os.listdir(path):
-        if file.endswith('.sh') and not(file.startswith('c_')):
+        if file.endswith('.sh') and not(file.startswith('c_')) and not(file.startswith('p_')):
             name_sh_M = " "
             name_sh = " "
             flag = False
@@ -27,19 +56,35 @@ def create_sh(path):
                 name_sh_M = path + "/" + "m_" + file
                 name_sh = path + "/" + file
                 flag = True
+                flag_dosemu = False
+
             if ext_M == "m" and name_sh_M != " ":
                 os.remove(name_sh_M)
+
             if flag == True:
-                copyfile(name_sh, name_sh_M)
-                print "---------------------------------------------------------------------------------------------"
-                print "Creating sh in path"
-                print "New sh file      :  ", name_sh_M
-                print "Original sh file :  ", name_sh
-                print "---------------------------------------------------------------------------------------------"
-                return name_sh_M, name_sh, file
+                flag_dosemu = verify_dosemu(name_sh)
+                if flag_dosemu == True:
+                    print "---------------------------------------------------------------------------------------------"
+                    print "copy file sh ...."
+                    copyfile(name_sh, name_sh_M)
+                    print "Creating sh in path"
+                    print "New sh file      :  ", name_sh_M
+                    print "Original sh file :  ", name_sh
+                    print "---------------------------------------------------------------------------------------------"
+                else:
+                    print "not applicable, not created sh file, not used dosemu in sh file "
+                    print path, "\n"
+
+
+                return name_sh_M, name_sh, file, flag_dosemu
+
+            if flag == False:
+                return name_sh_M, name_sh, file, flag_dosemu
 
 
 # -----------------------------------------------------------------------------------------------------------------------
+
+
 
 # -----------------------------------------------------------------------------------------------------------------------
 # IMPLEMENTATION
@@ -68,10 +113,14 @@ for x in os.walk(directory):
 # Copy in the corresponding  directory, the file .sh,
 # rename and  modify
 # ---------------------------------------------------------------------
+name_sh_M = " "
+name_sh = " "
 for indir in director[0]:
     path_in = directory + indir
+    flag_dosemu = False
+
     if indir != '.svn':
-        name_sh_M, name_sh, sh_file = create_sh(path_in)
+        name_sh_M, name_sh, sh_file, flag_dosemu = create_sh(path_in)
 
         split_sh = sh_file.split(".")
         name_pas = split_sh[0] + '.pas'
@@ -81,7 +130,7 @@ for indir in director[0]:
         rename_p = 'mv pmproc.pas ' + name_pas
         #print line_pas
 
-        if name_sh_M != " " and name_sh != " ":
+        if name_sh_M != " " and name_sh != " " and flag_dosemu == True:
 
             flag_open = True
             try:
