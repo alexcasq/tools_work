@@ -65,7 +65,8 @@ def clean_all(path):
             if file.endswith('.sh'):
                 file_strip = file.strip("_")
                 ext_M = file_strip[0]
-                if ext_M == "M" or ext_M == "m" or ext_M == "c":
+                if ext_M == "M" or ext_M == "m" or ext_M == "c" or ext_M == "p":
+                    print "delete ... ", file
                     pathFile = pathFolder + file
                     os.remove(pathFile)
 
@@ -130,7 +131,7 @@ def rename(path, ext):
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
-# rename files whit especific extension
+# rename files whit especific file name
 # ------------------------------------------------------------------------------
 def rename_file(path, file_name):
     print "-------------------------------------"
@@ -165,7 +166,7 @@ def rename_file(path, file_name):
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
-# rename files whit especific extension
+# rename files whit especific file name, rename is with name folder
 # ------------------------------------------------------------------------------
 def rename_file_app(path, file_name):
     print "-------------------------------------"

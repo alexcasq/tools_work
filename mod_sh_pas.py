@@ -11,6 +11,33 @@ from shutil import copyfile
 
 
 # -----------------------------------------------------------------------------------------------------------------------
+# Function to verify dosemu comand in file
+# -----------------------------------------------------------------------------------------------------------------------
+def verify_dosemu(name_sh):
+
+    salida = False
+    flag_open = True
+    try:
+        orig_file = open(name_sh)
+        flag_open = True
+
+    except:
+        print "Not is possible to open the file "
+        flag_open = False
+
+    if flag_open:
+        print "open file ok, verify dosemu  ......"
+        for linea in orig_file:
+            if 'dosemu' in linea:
+                salida = True
+
+    return salida
+
+
+# -----------------------------------------------------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------------------------------------------------
 # Function to creating sh file, this file is created as a copy of a ixisting file sh
 # -----------------------------------------------------------------------------------------------------------------------
 def create_sh(path):
@@ -20,6 +47,8 @@ def create_sh(path):
     ext_pas = " "
     # Verifying that exist the file with extension .c
     flag_pas = False
+    flag_dosemu = False
+    flag_pmproc = False
 
     for file in os.listdir(path):
 
@@ -27,22 +56,28 @@ def create_sh(path):
             flag_pas = True
             file_strip = file.split(".pas")
             ext_pas = file_strip[0]
-
-            name_sh_pas = path + "/" + "p_" + ext_pas + ".sh"
+           
             name_sh = path + "/m_" + ext_pas + ".sh"
-            print "----------------------------------------------------------------------------------"
-            print "Creating sh in path"
-            print "new sh      : ", name_sh_pas
-            print "original sh : ", name_sh
-            print "file raiz   :", ext_pas
-            copyfile(name_sh, name_sh_pas)
-            print "----------------------------------------------------------------------------------"
+            flag_dosemu = False
+            flag_dosemu = verify_dosemu(name_sh)
+            print "flag dosemu: ", flag_dosemu
+            flag_pmproc = verify_not_pcproc(name_sh)
+
+            if flag_dosemu and flag_pmproc:
+                name_sh_pas = path + "/" + "p_" + ext_pas + ".sh"
+                print "----------------------------------------------------------------------------------"
+                print "Creating sh in path"
+                print "new sh      : ", name_sh_pas
+                print "original sh : ", name_sh
+                print "file raiz   :", ext_pas
+                copyfile(name_sh, name_sh_pas)
+                print "----------------------------------------------------------------------------------"
 
         if flag_pas:
             print "path: ", path
             print "Not file .pas, not created sh file \n"
 
-    return name_sh_pas, name_sh, ext_pas
+    return name_sh_pas, name_sh, ext_pas, flag_dosemu
 
 
 # -----------------------------------------------------------------------------------------------------------------------
@@ -68,6 +103,7 @@ def verify_not_pcproc(name_sh):
 
     return salida
 
+
 # -----------------------------------------------------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------------------------------------------------
@@ -85,7 +121,6 @@ pathfile = []
 list_dir = []
 path_sw = []
 list_name_sh = []
-flag_open = True
 flag_section = True
 
 for x in os.walk(directory):
@@ -101,9 +136,11 @@ for indir in director[0]:
     path_in = directory + indir
     if indir != '.svn':
 
-        name_sh_M, name_sh, sh_file = create_sh(path_in)
+        flag_dosemu = False
 
-        if name_sh_M != " " and name_sh != " ":
+        name_sh_M, name_sh, sh_file, flag_dosemu = create_sh(path_in)
+
+        if flag_dosemu:
 
             flag_pmproc = False
             print name_sh
@@ -111,29 +148,27 @@ for indir in director[0]:
             print "flag not pmproc : ", flag_pmproc
             flag_open = True
 
-            try:
-                mod_file = open(name_sh_M, "w")
-                orig_file = open(name_sh)
-            except:
-                print "Not is possible to open the file "
-                flag_open = False
+            if flag_pmproc:
 
-            if flag_open:
+                try:
+                    mod_file = open(name_sh_M, "w")
+                    orig_file = open(name_sh)
+                except:
+                    print "Not is possible to open the file"
 
-                if flag_pmproc:
-                    list_dir.append(name_sh_M)
-                    path_sw.append(path_in)
-                    list_name_sh.append(sh_file)
+                list_dir.append(name_sh_M)
+                path_sw.append(path_in)
+                list_name_sh.append(sh_file)
 
-                    for linea in orig_file:
-                        if linea.startswith('export DOSAUTOCD='):
-                            flag_section = False
+                for linea in orig_file:
+                    if linea.startswith('export DOSAUTOCD='):
+                        flag_section = False
 
-                        if flag_section:
-                            mod_file.write(linea)
+                    if flag_section:
+                        mod_file.write(linea)
 
-                        if linea.startswith('# Procesing testing code for PASCAL'):
-                            flag_section = True
+                    if linea.startswith('# Procesing testing code for PASCAL'):
+                        flag_section = True
 
                 mod_file.close()
                 orig_file.close()

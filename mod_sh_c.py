@@ -18,11 +18,18 @@ def create_sh(path):
     name_sh = " "
     ext_c = " "
     flag_c = False
+    name_c = " "	
     # Verifying that exist the file with extension .c
 
     for file in os.listdir(path):
+        if file.endswith('.sh') and file.startswith('m_') == False:
+            filec_strip  = file.split(".sh")
+            name_c = filec_strip[0] + '.c'
+	    print name_c
 
-        if file.endswith('.c'):
+    for file in os.listdir(path):
+	    
+        if file.endswith('.c') and file == name_c:
             flag_c = True
             file_strip = file.split(".c")
             ext_c = file_strip[0]
@@ -37,9 +44,9 @@ def create_sh(path):
             copyfile(name_sh, name_sh_c)
             print "----------------------------------------------------------------------------------"
 
-        if not flag_c:
-            print "path: ", path
-            print "Not file .c, not created sh file \n"
+        #if flag_c == False:
+           # print "path: ", path
+           # print "Not file .c, not created sh file \n"
 
     return name_sh_c, name_sh, ext_c
 
