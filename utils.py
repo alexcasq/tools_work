@@ -49,7 +49,7 @@ def clean_all(path):
 
     subFolders = []
     subFolders = listFolder(path)
-    vfolder = subFolders[0];
+    vfolder = subFolders[0]
     print vfolder
 
     for folder in vfolder:
@@ -57,15 +57,16 @@ def clean_all(path):
         print "----------------"
         print "delete files...."
         for file in os.listdir(pathFolder):
-            print file
             if file.endswith('.c') or file.endswith('.o'):
+                print file
                 pathFile = pathFolder + file
                 os.remove(pathFile)
 
             if file.endswith('.sh'):
                 file_strip = file.strip("_")
                 ext_M = file_strip[0]
-                if ext_M == "M" or ext_M == "m":
+                if ext_M == "M" or ext_M == "m" or ext_M == "c" or ext_M == "p":
+                    print "delete ... ", file
                     pathFile = pathFolder + file
                     os.remove(pathFile)
 
@@ -78,21 +79,27 @@ def clean_all(path):
 def clean(path, ext):
     # type: (object) -> object
     print "-------------------------------------"
-    print "Clean file .c .o "
+    print "Clean file " + str(ext)
     print "-------------------------------------"
 
-    for file in os.listdir(path):
-        print file
+    subFolders = []
+    subFolders = listFolder(path)
+    vfolder = subFolders[0]
+    print vfolder
 
-        if file.endswith(ext):
-            pathFile = path + file
-            os.remove(pathFile)
-
+    for folder in vfolder:
+        pathFolder = path + folder + "/"
+        print "----------------"
+        for file in os.listdir(pathFolder):
+            if file.endswith(ext):
+                print "delete file ..  ", file
+                pathFile = pathFolder + file
+                os.remove(pathFile)
 
 # --------------------------------------------------------
 
-# ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
 # rename files whit especific extension
 # ------------------------------------------------------------------------------
 def rename(path, ext):
@@ -123,6 +130,75 @@ def rename(path, ext):
 
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# rename files whit especific file name
+# ------------------------------------------------------------------------------
+def rename_file(path, file_name):
+    print "-------------------------------------"
+    print "Rename files to extension "
+    print "-------------------------------------"
+
+    file_strip = file_name.split(".")
+    ext = file_strip[1]
+    print ext
+
+    subFolders = []
+    subFolders = listFolder(path)
+    vfolder = subFolders[0]
+
+    for folder in vfolder:
+        pathFolder = path + folder + "/"
+        name = find_sh(pathFolder)
+        if len(name) > 0:
+            for file in os.listdir(pathFolder):
+                if file == file_name:
+                    pathFile = pathFolder + file
+                    pathrename = pathFolder + name +  "." + ext
+                    print "--------------------------------------------------"
+                    print "Rename files : "
+                    print pathFolder
+                    print pathFile
+                    print pathrename
+                    print "--------------------------------------------------"
+                    os.rename(pathFile, pathrename)
+
+
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# rename files whit especific file name, rename is with name folder
+# ------------------------------------------------------------------------------
+def rename_file_app(path, file_name):
+    print "-------------------------------------"
+    print "Rename files to extension "
+    print "-------------------------------------"
+
+    file_strip = file_name.split(".")
+    ext = file_strip[1]
+    #print ext
+    subFolders = []
+    subFolders = listFolder(path)
+    vfolder = subFolders[0]
+
+    for folder in vfolder:
+        #print folder
+        pathFolder = path + folder + "/"
+
+        for file in os.listdir(pathFolder):
+            if file == file_name:
+                pathFile = pathFolder + file
+                pathrename = pathFolder + folder +  "." + ext
+                print "--------------------------------------------------"
+                print "Rename files : "
+                print pathFolder
+                print pathFile
+                print pathrename
+                print "--------------------------------------------------"
+                os.rename(pathFile, pathrename)
+
+
+# ------------------------------------------------------------------------------
+
 
 # ------------------------------------------------------------------------------
 # Select option
@@ -149,17 +225,31 @@ if __name__ == "__main__":
         rename(path, ext)
         print "rename execute finish"
 
+    if sel[0] == '-rename_file' and len(sel) > 2:
+        path       = sel[1]
+        file_name  = sel[2]
+        rename_file(path, file_name)
+        print "rename file execute finish"
+
+    if sel[0] == '-rename_file_app' and len(sel) > 2:
+        path       = sel[1]
+        file_name  = sel[2]
+        rename_file_app(path, file_name)
+        print "rename file_app execute finish"
+
     if sel[0] == '-find_sh' and len(sel) > 1:
         path = sel[1]
         print find_sh(path)
 
     if sel[0] == '-help' and len(sel) > 0:
-        print "-----------------------------"
-        print "find_sh   'path' "
-        print "clean_all 'path' "
-        print "clean     'path' 'extension' "
-        print "rename    'path' 'extension' "
-        print "------------------------------"
+        print "-------------------------------------"
+        print "find_sh          'path' "
+        print "clean_all        'path' "
+        print "clean            'path' 'extension' "
+        print "rename           'path' 'extension' "
+        print "rename_file      'path' 'file_name' "
+        print "rename_file_app  'path' 'file_name' "
+        print "-------------------------------------"
 
 
 
